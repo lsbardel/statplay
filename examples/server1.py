@@ -7,19 +7,16 @@ HOST = 'localhost'
 from twisted.web2 import server, channel
 from twisted.internet import reactor
 from jsonrpc import jsonrpc
+import roll
 
-
-from rpy2.robjects import r
-r('library(quantmod)')
-    
 
 class JsonService(jsonrpc):
     
     def __init__(self):
         jsonrpc.__init__(self)
     
-    def jsonrpc_history(self, request, ticker):
-        pass
+    def jsonrpc_mean(self, request, ticker, window = 20):
+        return roll.mean.get(ticker,window = window)
 
 
 site = server.Site(JsonService())
