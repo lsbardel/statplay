@@ -8,11 +8,12 @@ from twisted.python import log, reflect
 from jsonlib import *
 
 
-def rpcfunction(f, id, *args, **kwargs):
+def rpcfunction(f, method, *args, **kwargs):
     '''
     Decorator for jsonrpc functions
     '''
     def wrapper(request):
+        log.msg('Accessing remote function %s' % method)
         try:
             res = f(request, *args, **kwargs)
         except Exception, e:
@@ -70,7 +71,7 @@ class jsonrpc(resource.Resource):
         for k,v in kwargs.items():
             kwstr[str(k)] = v
         function = self.get_function(method)
-        return rpcfunction(function, id, *args, **kwstr)
+        return rpcfunction(function, method, *args, **kwstr)
     
     def handleRequest(self, json):
         '''
